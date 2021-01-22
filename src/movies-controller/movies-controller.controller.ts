@@ -1,4 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { CreateMovieDTO } from 'src/movies/dto/create-movie.dto';
+import { UpdateMovieDTO } from 'src/movies/dto/update-movie.dto';
+import { Movie } from 'src/movies/entities/movie.entity';
 import { MoviesService } from 'src/movies/movies.service';
 
 
@@ -20,27 +23,23 @@ export class MoviesControllerController {
     }
 
     @Get("/:id")
-    getOne(@Param("id") movieId:string){
-        return `This will return one movie with the id: ${movieId}`;
+    getOne(@Param("id") movieId:string):Movie{
+        return this.moviesService.getOne(movieId);
     }
     //request body 가져옴
     @Post()
-    create(@Body() movieData){
-        console.log(movieData);
-        return movieData;
+    create(@Body() movieData:CreateMovieDTO){
+        return this.moviesService.create(movieData);
     }
 
     @Delete("/:id")
     remove(@Param('id') movieId:string){
-        return `This will delete a movie with the id: ${movieId}`;
+        return this.moviesService.deleteOne(movieId);
     }
     //update
     @Patch("/:id")
-    path(@Param('id') movieId:string,@Body() updateData){
-        return {
-            updatedMovie:movieId,
-            ...updateData
-        }
+    path(@Param('id') movieId:string,@Body() updateData:UpdateMovieDTO){
+        return this.moviesService.update(movieId,updateData);
     }
 
     
